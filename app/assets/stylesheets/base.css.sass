@@ -1,0 +1,180 @@
+@import "bootstrap"
+@import "bootstrap-responsive"
+
+.buttons
+  text-align: right
+  margin-top: 5px
+  z-index: 99
+  position: relative
+
+  .btn
+    &:hover
+      text-decoration: none
+    span
+      visibility: hidden
+      font-size: 12px
+      vertical-align: middle
+    &:hover span
+      visibility: visible
+
+    i.hidden
+      display: none
+
+
+.profile-pic
+  width: 48px
+  img
+    max-width: 48px
+    max-height: 48px
+
+#video
+  max-width: 480px
+  position: relative
+  margin: 20px auto 0px auto
+
+.wrapper_span
+  font-size: 1em
+  margin-top: -3px
+
+body
+  padding-top: 20px
+  padding-bottom: 40px
+
+.metadata
+  table
+    width: 100%
+  .tweet-text
+    padding-left: 10px
+
+#border
+  position: absolute
+  top: -20px
+  left: -20px
+  height: 470px
+  width: 470px
+  border: 24px solid white
+  -webkit-border-radius: 62px
+  -moz-border-radius: 62px
+  -o-border-radius: 62px
+  border-radius: 62px
+
+/* Portrait tablet to landscape and desktop
+@media (min-width: 769px)
+  #textcolumn
+    margin-top: 30px
+
+@media (max-width: 767px)
+  #textcolumn
+    margin-top: 60px
+
+/* The following styassetles are borrowed from http://x5315.com. License follows:
+ * Copyright 2012, Tom Brearley. Creative Commons Attribution-Noncommercial 2.0
+ * UK: England & Wales License
+
+.nonblock
+  display: inline
+
+.verb_icons
+  padding-left: 1px
+  a
+    background-image: image-url("tweet-sprite.png")
+    background-repeat: no-repeat
+    position: relative
+    top: 2px
+    margin: 0 2px
+    height: 15px
+    width: 15px
+    display: inline-block
+    &:nth-child(1)
+      background-position: 0 0
+    &:nth-child(2)
+      background-position: -81px 0
+    &:nth-child(3)
+      background-position: -34px 0
+    &:nth-child(4)
+      background-image: url("//facebook.com/favicon.ico")
+    &:nth-child(1):hover
+      background-position: -16px 0
+    &:nth-child(2):hover
+      background-position: -97px 0
+    &:nth-child(3):hover
+      background-position: -50px 0
+
+body.fullscreen
+  font-size: 24px
+  line-height: 26px
+  padding: 5px
+
+  .span6
+    width: 100%
+
+  #video
+    max-width: 600px
+
+  #textcolumn
+    width: 600px
+    margin: 0 auto
+    float: none
+
+  #phone-top
+    display: block !important
+    width: 600px
+    margin: 0 auto
+    float: none
+
+    .metadata
+      display: none
+    
+body.embed
+
+  .metadata
+    margin-top: 10px
+
+  #video
+    margin-left: 12px
+    margin-right: 12px
+    max-width: none
+
+body.signup
+
+  .learn-more-sidebar
+    margin-left: 0
+
+    &.affix
+      top: 20px
+
+  .span10
+    font-size: 24px
+    line-height: 150%
+
+  h1
+    font-size: 56px
+    line-height: 2
+    text-align: center
+
+  h2.quote
+    font-size: 31px
+    margin-bottom: 32px
+    line-height: 1.1
+    font-family: Georgia
+    font-weight: normal
+    text-align: center
+
+    .mark
+      font-size: 60px
+
+    .attribution
+      display: block
+      text-align: right
+      font-style: italic
+
+  ul
+    li
+      line-height: 1.8
+
+footer
+  span.small
+    display: block
+    color: #666
+    margin-top: 5px
+    font-size: 0.85em

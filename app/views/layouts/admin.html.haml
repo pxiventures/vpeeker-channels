@@ -1,0 +1,51 @@
+- content_for :head do
+  = stylesheet_link_tag "admin"
+  = javascript_include_tag "admin"
+
+  = render partial: "application/ga"
+
+- content_for :navbar do
+  .pull-left.logo
+    = image_tag "logo-small.png", style: "height: 30px"
+
+  = link_to "#{root_url}", class: "brand" do
+    #{AppConfig.app_name}
+
+  %ul.nav
+    - unless user_signed_in?
+      =nav_link "Learn More", signup_path
+    - else
+      =nav_link "My Channels", channels_path
+      =nav_link "My Account", edit_user_registration_path
+    - if can? :access, :rails_admin
+      =nav_link "Admin", rails_admin.dashboard_path
+
+  %ul.nav.pull-right
+    - if user_signed_in?
+      %li= link_to "Sign out (#{current_user.nickname})", destroy_user_session_path, method: :delete
+    - else
+      %li= link_to "Sign up/in with Twitter", user_omniauth_authorize_path(:twitter)
+
+= render template: "layouts/application"
+
+.container
+  %hr
+  %footer
+    .pull-right
+      = link_to "Terms and Conditions", terms_path
+      \|
+      = link_to "Contact Us", "&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#116;&#101;&#97;&#109;&#64;&#112;&#120;&#105;&#46;&#105;&#111;".html_safe 
+
+    %p
+      %span.small
+        &copy;
+        #{AppConfig.app_name}
+        = succeed "." do
+          = Time.now.year
+        #{AppConfig.app_name} is not affiliated with or endorsed by
+        %a{:href => "http://vine.co"}
+          Vine
+        in any way.
+
+- if user_signed_in?
+  = render partial: "application/modals"

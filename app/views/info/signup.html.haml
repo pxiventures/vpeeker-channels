@@ -1,0 +1,19 @@
+- content_for :title, "Sign up for a channel"
+
+- content_for :body_class, "signup"
+
+.row
+
+  %a{name: "pricing"}
+  %h1
+    Pricing
+
+  %div{style: 'font-size: 13px'}
+    = render partial: "application/pricing_table", locals: {plans: @plans}
+
+  - unless current_user
+    %a{name: "signup"}
+    %h1 I want it!
+
+    .div{style: "text-align: center"}
+      = link_to "Sign up for #{AppConfig.app_name}", user_omniauth_authorize_path(:twitter), class: "btn btn-success btn-large"

@@ -1,0 +1,46 @@
+.row
+  .span8
+    = simple_form_for channel, html: {class: "form-horizontal"} do |f|
+
+      = f.input :name, placeholder: "My awesome channel", hint: "Pick something that will help you remember what this channel is for."
+      = f.input :subdomain, placeholder: "my-channel", hint: "You will get 'my-channel.#{AppConfig.hosted_domain}'"
+      = f.input :search, hint: "This has ' vine' appended to the end of it and is run against the Twitter Search API.<br />You can test your search to make sure it brings in Vines you expect by running it at <a href='http://search.twitter.com/'>search.twitter.com</a>.", placeholder: "#cat OR #dog"
+      - if current_user.can? :moderate, Channel
+        = f.input :default_approved_state, hint: "Tick this to auto-approve videos. Untick it to require each video to be moderated before it shows up on the public-facing channel page."
+      - if current_user.super_admin?
+        = f.input :video_limit, hint: "Maximum number of videos that will be stored in the DB. It must be greater than #{AppConfig.remember_videos}. Please contact us if you wish to store all videos."
+      = f.input :running, hint: "If this is ticked, the system will continue to fetch new Vines that are posted. If unticked, your channel will essentially be 'paused' only showing Vines that have already been created and added to your channel.", label: "Fetch new Vines?"
+      - if current_user.can? :brand, Channel
+        = f.input :custom_css, hint: "Please use responsibly."
+      - else
+        .control-group.text.optional
+          %label.text.optional.control-label
+            Custom CSS
+            %span.label.label-important Upgrade
+          .controls
+            You must
+            = link_to (current_user.subscribed? ? "upgrade" : "sign up for a plan"), edit_user_registration_path
+            in order to customise your channel's CSS
+
+      = f.input :ga_tag, placeholder: "UA-xxxxxxxx-x", label: "Google Analytics Property Tag", hint: "Available in your Google Analytics settings. Leave blank if you are unsure."
+      
+      = f.input :default_mute, label: "Mute by default", hint: "If ticked, the channel will start in mute by default and will need to be unmuted by the viewer to hear video sound. Note: this only applies to channel pages, not embed codes. Embedded channels always start in a mute state by default."
+      
+
+      .form-actions
+        = f.submit "Save", class: "btn btn-primary"
+
+  .span4
+    .well
+      %p Examples of valid searches:
+
+      %ul
+        %li #cat OR #dog
+        %li from:jalada OR from:petermacrobert OR from:xenophin
+        %li #life
+        %li :)
+
+      %p
+        For more ideas, see
+        = link_to "search.twitter.com", "https://twitter.com/search"
+

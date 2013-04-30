@@ -1,0 +1,64 @@
+%table#pricing.table.table-condensed.table-hover
+  %thead
+    %tr
+      %th
+      - plans.each do |plan|
+        %th{class: (current_user and current_user.plan == plan) ? "active" : ""}
+          = plan.name
+  %tbody
+    %tr
+      %td Price
+      = pricing_cells(plans, ->(p) { number_to_currency(p.price, {unit: "$", precision: 0}) })
+    %tr
+      %td Billing Period
+      = pricing_cells(plans, ->(p) { p.billing_period })
+    %tr
+      %td Channels
+      = pricing_cells(plans, ->(p) { p.channels })
+    %tr
+      %td Custom subdomain
+      = pricing_cells(plans, ->(p) { p.custom_subdomain ? "Y" : "-" })
+    %tr
+      %td Usage
+      = pricing_cells(plans, ->(p) { p.usage })
+    %tr
+      %td Support
+      = pricing_cells(plans, ->(p) { p.support.present? ? p.support : "-" })
+    %tr
+      %td Custom branding
+      = pricing_cells(plans, ->(p) { p.branding ? "Y" : "-" })
+    %tr
+      %td Embed
+      = pricing_cells(plans, ->(p) { p.embed ? "Y" : "-" })
+    %tr
+      %td Moderation
+      = pricing_cells(plans, ->(p) { p.moderation ? "Y" : "-" })
+    %tr
+      %td Password Channel
+      = pricing_cells(plans, ->(p) { p.password_channel ? "Y" : "-" })
+    %tr
+      %td Your own domain
+      = pricing_cells(plans, ->(p) { p.your_own_domain ? "Y" : "-" })
+    %tr
+      %td Feature Prioritisation
+      = pricing_cells(plans, ->(p) { p.feature_prioritisation ? "Y" : "-" })
+    %tr
+      %td Mobile Optimised
+      = pricing_cells(plans, ->(p) { p.mobile_optimised ? "Y" : "-" })
+    - if current_user
+      %tr
+        %td
+        - if current_user.subscribed?
+          - plans.each do |plan|
+            %td
+              - unless current_user.plan == plan
+                = form_for current_user, url: registration_path(User) do |f|
+                  %input{type: "hidden", name: "plan_id", value: plan.id}
+                  %input.btn.btn-success{type: "submit", name: "update", value: "Change plan to #{plan.name}", data: {confirm: "Are you sure?"}}
+              - else
+                You are on this plan.
+
+        - else
+          - plans.each do |plan|
+            %td
+              = link_to "Sign up for the #{plan.name} plan", $fastspring.create_subscription(plan.fastspring_reference, Subscription.referrer(current_user)), class: "btn btn-success"

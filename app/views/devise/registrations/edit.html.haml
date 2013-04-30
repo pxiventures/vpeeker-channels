@@ -1,0 +1,44 @@
+- content_for :title, "Your Account"
+%h2= yield :title
+= simple_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f|
+  = f.error_notification
+  .form-inputs
+    = f.input :email, :required => true, :autofocus => true
+  .form-actions
+    = f.button :submit, "Update"
+
+%h2
+  Your Plan
+
+- if current_user.subscribed?
+  = form_for current_user, :url => registration_path(User) do |f|
+    = link_to "Manage my subscription", current_user.active_subscription.customer_url, class: "btn btn-primary"
+
+- else
+  %p
+    You are currently on the #{current_user.plan.name} plan which is not a standard subscription. 
+    Your account will have various restrictions in place &mdash; subject to the specific terms of your individual license. Currently you are limited to #{pluralize(current_user.plan.channels, "channel")} and you 
+    #{current_user.plan.embed? ? "are" : "are not"} able to embed channels.
+  
+  %p 
+    Please feel free to sign up to an official plan below, or contact 
+    %a(href="mailto:team@pxi.io") the PXi team
+    if you have any queries about the best plan for you.
+    
+  %h2 Official plans
+
+= render partial: "application/pricing_table", locals: {plans: @plans}
+
+%p{style: "text-align: center"}
+  - if current_user.active_subscription
+    = succeed "." do
+      - if current_user.active_subscription.next_period_date
+        Your subscription renews on #{current_user.active_subscription.next_period_date}
+      - elsif current_user.active_subscription.end_date
+        Your subscription ends on #{current_user.active_subscription.end_date}
+      - if current_user.active_subscription.status_reason == "canceled"
+        (You have cancelled)
+
+- if current_user.subscribed?
+  = form_for current_user, :url => registration_path(User) do |f|
+    = link_to "Manage my subscription", current_user.active_subscription.customer_url, class: "btn btn-primary"

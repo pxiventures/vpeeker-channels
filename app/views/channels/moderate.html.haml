@@ -1,0 +1,20 @@
+%h1 Unmoderated videos
+
+- @videos.each do |video|
+
+  %div.moderating-video
+    = image_tag video.thumbnail_url, class: "thumbnail"
+    %table
+      %tr
+        %td= image_tag video.tweet.user.profile_image_url, class: "profile-pic"
+        %td
+          %p
+            %strong
+              = video.tweet.user.screen_name
+            = video.tweet.text
+    = link_to "Approve", approve_channel_video_path(@channel, video), method: :post, class: "btn btn-success"
+    = link_to "Deny", deny_channel_video_path(@channel, video), method: :post, class: "btn btn-danger"
+
+  %hr
+
+= link_to "Approve all videos on this page", approve_channel_video_path(@channel, @videos.map(&:id).join(",")), class: "btn btn-success btn-large", method: :post

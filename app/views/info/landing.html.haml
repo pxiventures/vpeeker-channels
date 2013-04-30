@@ -1,0 +1,21 @@
+- content_for :title, "What's your view?"
+
+.jumbotron.well
+  .pull-right
+    =image_tag "logo-large.png", title: "Vince the VPeeker"
+
+  %h1 Start a channel
+
+  %h3
+    - if current_user
+      = link_to "Get Started &rarr;".html_safe, channels_path
+    - else
+      = link_to "Learn more &rarr;".html_safe, signup_path
+
+.recent
+  %h3 Recent channels
+  .top-channels
+    - @top_channels.each_with_index do |channel, i|
+      .channel{class: (i == 0 ? "first" : nil)}
+        = link_to "#{channel.name}", subdomain_channel_url(subdomain: channel.subdomain), class: "name"
+        = link_to "@#{channel.user.nickname}", "http://twitter.com/#{channel.user.nickname}", rel: "nofollow", class: "curator"

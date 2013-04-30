@@ -1,0 +1,104 @@
+- content_for :head do
+  = javascript_include_tag "vanilla"
+
+  :css
+    #{@channel.custom_css}
+
+    #sharebar {
+      color: #333;
+      text-shadow: 1px 1px 3px #eee;
+      text-align: center;
+    }
+
+    #sharebar h2 {
+      font-weight: normal;
+      font-size: 20px;
+    }
+
+    #sharebar .twitter {
+      color: #00aaaa;
+    }
+      
+
+
+  = render partial: "application/ga"
+
+- content_for :title do
+  = @channel.name
+
+#phone-top.row.visible-phone
+  .span12
+    %h2.muted= @channel.name
+    %hr/
+    .metadata
+#main-row.row
+  #videocolumn.span6
+    #video
+      %video#videoplayer.video-js.vjs-default-skin{:controls => "", :preload => "auto"}
+      #border
+      .buttons
+        %a.mute.btn.btn-primary{"data-placement" => "left", "data-toggle" => "button", "href" => "#", "rel" => "tooltip", "title" => "Toggle Sound"}
+          %i.icon-volume-up.icon-2x
+          %i.icon-volume-off.hidden.icon-2x
+        %a.fullscreen.btn.btn-primary{"data-placement" => "left", "data-toggle" => "button", :href => "#", :rel => "tooltip", :title => "Toggle fullscreen"}
+          %i.icon-resize-full.icon-2x
+        -#%a.save.btn.btn-danger{"data-placement" => "left", "data-toggle" => "button", :href => "#", :rel => "tooltip", :title => "Start Saving Vines"}
+          %i.icon-facetime-video
+  #textcolumn.span6
+    .metadata.hidden-phone
+    %hr/
+    %h2#blurb-header.muted.hidden-phone= @channel.name
+    %h4#blurb-header.muted.hidden-phone
+      curated by
+      = link_to "@#{@channel.user.nickname}", "http://twitter.com/#{@channel.user.nickname}", rel: "nofollow", class: "user-link"
+    #blurb
+      - if @channel.default_approved_state?
+        %p
+          %em This stream is coming straight from Vine and is unmoderated. You have been warned! :)
+      - unless @channel.running?
+        %p
+          %strong
+            This channel is currently not running. You will not
+            see new Vines.
+%hr/
+%footer.footer
+  %p
+    Powered by
+    = succeed "." do
+      = link_to AppConfig.app_name, "http://#{AppConfig.hosted_domain}"
+    Join #{AppConfig.app_name} to
+    = succeed "." do
+      = link_to "create your own channel", signup_url
+      
+    %span.small
+      %br
+      &copy;
+      %a{:href => "http://pxi.io"}
+        PXi Ventures
+      = succeed "." do
+        = Time.now.year
+      #{AppConfig.app_name} is not affiliated with or endorsed by
+      %a{:href => "http://vine.co"}
+        Vine
+      in any way.
+
+
+%script#videoTemplate{:type => "text/html"}
+  <table>
+  <tbody>
+  <tr>
+  <td class="profile-pic">
+  <a target="_blank" href="http://twitter.com/{{tweet.user.screen_name}}">
+  <img src="{{tweet.user.profile_image_url}}" />
+  </a>
+  </td>
+  <td class="tweet-text">
+  {{{tweetString}}}
+  </td>
+  </tr>
+  </tbody>
+  </table>
+:javascript
+  _V_.options.flash.swf = "video-js.swf";
+  _V_.ControlBar.prototype.options.components = {'playToggle':{}}
+  _V_.defaultMute = #{@channel.default_mute ? true : false};

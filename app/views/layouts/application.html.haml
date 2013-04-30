@@ -1,0 +1,42 @@
+!!!
+%html{:lang => "en"}
+  %head
+    %meta{:charset => "utf-8"}/
+    %title #{@title || AppConfig.app_name} | #{yield(:title) || "What's your view?"}
+    
+    - if content_for?(:description)
+      %meta{:content => yield(:description), :name => "description"}/
+      
+    %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}/
+    %meta{:content => AppConfig.app_name, :property => "og:title"}/
+    %meta{:content => "website", :property => "og:type"}/
+    %meta{:content => "http://#{AppConfig.hosted_domain}", :property => "og:url"}/
+    %meta{:content => "", :property => "og:image"}/
+    %meta{:content => AppConfig.app_name, :property => "og:site_name"}/
+    %script{:src => "//platform.twitter.com/widgets.js"}
+    = csrf_meta_tag
+    = include_gon
+    = stylesheet_link_tag "application"
+    = javascript_include_tag "application"
+    = yield :head
+    / HTML5 shim, for IE6-8 support of HTML5 elements
+    /[if lt IE 9]
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+
+  %body{class: yield(:body_class)}
+    - if Rails.env =~ /development/i
+      .alert.alert-warning
+        You are running in development. Subdomain links may fail.
+    #fb-root
+    .container.container-narrow
+
+      - if content_for? :navbar
+        .navbar
+          .navbar-inner
+            = yield :navbar
+
+      - if notice
+        .alert.alert-info= notice
+      - if alert
+        .alert.alert-danger= alert
+      = yield

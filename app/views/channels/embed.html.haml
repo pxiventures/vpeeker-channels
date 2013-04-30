@@ -1,0 +1,50 @@
+- content_for :head do
+  = javascript_include_tag "vanilla"
+
+  %style{type: "text/css"}
+    = @channel.custom_css
+
+  = render partial: "application/ga"
+
+- content_for :body_class, "embed"
+
+.row
+  .span12
+    %h2
+      = link_to @channel.name, subdomain_channel_path(), target: "_blank"
+
+    #video
+      %video#videoplayer.video-js.vjs-default-skin{:controls => "", :preload => "auto"}
+      #border
+      .buttons
+        %a.mute.btn.btn-primary{"data-placement" => "left", "data-toggle" => "button", "href" => "#", "rel" => "tooltip", "title" => "Toggle Sound"}
+          %i.icon-volume-up
+          %i.icon-volume-off.hidden
+      .metadata
+
+    %hr
+
+    %footer{style: "text-align: center"}
+      %small
+        Powered by
+        = link_to AppConfig.app_name, "http://#{AppConfig.hosted_domain}", target: "_blank"
+
+%script#videoTemplate{:type => "text/html"}
+  <table>
+  <tbody>
+  <tr>
+  <td class="profile-pic">
+  <a target="_blank" href="http://twitter.com/{{tweet.user.screen_name}}">
+  <img src="{{tweet.user.profile_image_url}}" />
+  </a>
+  </td>
+  <td class="tweet-text">
+  {{{tweetString}}}
+  </td>
+  </tr>
+  </tbody>
+  </table>
+:javascript
+  _V_.options.flash.swf = "video-js.swf";
+  _V_.ControlBar.prototype.options.components = {'playToggle':{}}
+  _V_.defaultMute = true;

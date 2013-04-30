@@ -1,0 +1,99 @@
+defaults: &defaults
+
+  # Where is your app hosted?
+  hosted_domain: <%= ENV["HOSTED_DOMAIN"] %>
+  # What do you want to call it? e.g. "My VPeeker"
+  app_name: <%= ENV["APP_NAME"] %>
+  # Email address used to send emails from
+  mailer_sender: <%= ENV["MAILER_SENDER"] %>
+
+  # Default plan name
+  default_plan: "Free"
+
+  # Your GA property ID and domain
+  ga_tag: <%= ENV["GA_TAG"] %>
+  ga_domain: <%= ENV["GA_DOMAIN"] %>
+
+  # Configuration for channels, including intervals between searches.
+  # Generally you'll want to keep these settings the same.
+  channels:
+    shortest_interval: 10
+    longest_interval: 90
+    recovery_time: 120
+    activity_threshold: <%= 6.hours %>
+
+  # Default search interval in seconds.
+  default_search_interval: 10
+  # Default number of videos to retain in the DB.
+  default_video_limit: 100
+  # Maximum video IDs to retain in a session variable for a user on a channel.
+  remember_videos: 50
+  max_videos: 200
+
+  # Your Twitter credentials
+  twitter:
+    consumer_key: <%= ENV["TWITTER_CONSUMER_KEY"] %>
+    consumer_secret: <%= ENV["TWITTER_CONSUMER_SECRET"] %>
+    # Generate an access token and secret to perform searches for channels
+    # that don't have an associated Twitter account.
+    access_token: <%= ENV["TWITTER_ACCESS_TOKEN"] %>
+    access_token_secret: <%= ENV["TWITTER_ACCESS_TOKEN_SECRET"] %>
+
+  # For Facebook sharing
+  facebook:
+    app_id: <%= ENV["FACEBOOK_APP_ID"] %>
+
+  # Your Fastspring credentials for accepting payments.
+  fastspring:
+    store_id: <%= ENV["FASTSPRING_STORE_ID"] %>
+    # Set up an API-only account.
+    username: <%= ENV["FASTSPRING_USERNAME"] %>
+    password: <%= ENV["FASTSPRING_PASSWORD"] %>
+    # This is the notification private key, it should be the same for all
+    # types of notifications. You should set up the appropriate notifications.
+    private_key: <%= ENV["FASTSPRING_PRIVATE_KEY"] %>
+    # Whether or not to prorate when changing subscription plans
+    proration: true
+    
+  # Basic auth credentials for data liberation endpoints.
+  export:
+    username: <%= ENV["EXPORT_USERNAME"] %>
+    password: <%= ENV["EXPORT_PASSWORD"] %>
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+  hosted_domain: "channels.example.com"
+  app_name: Test VPeeker
+
+  default_plan: "Free"
+
+  ga_tag: "ga-tag"
+  ga_domain: "example.com"
+
+  twitter:
+    consumer_key: "twitter-consumer-key"
+    consumer_secret: "twitter-consumer-secret"
+    access_token: "twitter-access-token"
+    access_token_secret: "twitter-access-token-secret"
+
+  facebook:
+    app_id: "facebook-app-id"
+
+  fastspring:
+    store_id: "fastspring-store-id"
+    username: "fastspring-username"
+    password: "fastspring-password"
+    private_key: "fastspring-private-key"
+    proration: true
+
+  export:
+    username: "export-username"
+    password: "export-password"
+
+
+production:
+  <<: *defaults

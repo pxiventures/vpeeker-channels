@@ -1,0 +1,33 @@
+#embed-info.modal.hide.fade
+  .modal-header
+    %button.close{type: "button", data: {dismiss: "modal"}} &times;
+    %h3
+      Embed code for
+      %span.name
+  .modal-body
+    %p
+      Copy and paste the following HTML where you would like your embedded
+      channel. You can adjust the width and height in the style 
+      attribute or with CSS.
+    %p
+      %textarea
+
+    %h3.lead Example:
+    .example
+  .modal-footer
+    %a.btn{href: "#", data: {dismiss: "modal"}} Close
+
+#upgrade-modal.modal.hide.fade
+  .modal-header
+    %button.close{type: "button", data: {dismiss: "modal"}} &times;
+    %h3
+      You need to #{current_user.subscribed? ? "upgrade" : "sign up"} to do that
+  .modal-body
+    %p
+      You can't use that feature because you aren't on
+      #{current_user.subscribed? ? "the right" : "a"} 
+      #{AppConfig.app_name} subscription plan.
+
+  .modal-footer
+    %a.btn{href: "#", data: {dismiss: "modal"}} Close
+    = link_to (current_user.subscribed? ? "Upgrade" : "Sign Up"), edit_user_registration_path, class: "btn btn-success"

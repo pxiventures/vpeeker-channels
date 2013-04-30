@@ -1,0 +1,72 @@
+- content_for :title, "My Channels"
+
+%h1= yield :title
+
+%p
+  From here you can manage your channels, moderate videos, and add new
+  channels.
+
+- if can? :create, Channel
+  = link_to "Create new channel", new_channel_path, class: "btn btn-large btn-primary"
+- else
+  %h2.lead
+    - if current_user.subscribed?
+      You cannot create any more channels. Please
+      = link_to "upgrade your subscription", edit_user_registration_path
+      to create more channels.
+    - else
+      You need to sign up for a subscription in order to create channels.
+  = render partial: "application/pricing_table", locals: {plans: Plan.subscribable}
+
+- unless @channels.empty?
+  %table#channel-table.table.table-striped
+    %thead
+      %tr
+        %th Name
+        %th Search
+        %th Status
+        - if current_user.super_admin?
+          %th User
+          %th Last search status
+        %th Actions
+    %tbody
+      - @channels.each do |channel|
+        %tr
+          %td= channel.name
+          %td= channel.search
+          %td
+            = status_text_for(channel)
+            - if channel.videos.count > 0 and !current_user.super_admin?
+              .video-thumbnails
+                %h4 Recent videos:
+                - channel.videos.limit(5).each do |video|
+                  = link_to video.vine_url do
+                    = image_tag video.thumbnail_url
+            - if current_user.super_admin?
+              %dl
+                %dd
+                  %strong Last search ran:
+                  = channel.searched_at ? time_ago_in_words(channel.searched_at) + " ago" : "Never"
+                %dd
+                  %strong Total videos:
+                  = channel.videos.count
+          - if current_user.super_admin?
+            %td= (channel.user && channel.user.nickname) || "-"
+            %td= (channel.last_search_status) || "-"
+          %td{style: "width: 134px;"}
+            .btn-toolbar
+              .btn-group
+                %a.btn.btn-small.btn-success.dropdown-toggle{data: {toggle: "dropdown"}, href: "#"}
+                  Use
+                  %span.caret
+                %ul.dropdown-menu
+                  %li= link_to "View", subdomain_channel_url(subdomain: channel.subdomain)
+                  %li= restricted_link_to "Embed", subdomain_embed_channel_url(subdomain: channel.subdomain), (can? :embed, Channel), class: "embed", title: channel.name
+              .btn-group
+                %a.btn.btn-small.btn-info.dropdown-toggle{data: {toggle: "dropdown"}, href: "#"}
+                  Manage
+                  %span.caret
+                %ul.dropdown-menu
+                  %li= restricted_link_to "Moderate", moderate_channel_path(channel), (can? :moderate, Channel), class: "moderate"
+                  %li= link_to "Edit", edit_channel_path(channel)
+                  %li= link_to "Delete", channel, method: :delete, confirm: "Are you sure?"
